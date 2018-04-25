@@ -123,66 +123,21 @@ $(document).ready(function () {
 <div id="required-packages" class="section level2">
 <h2>Required Packages</h2>
 <pre class="r"><code>library(readr)
-library(rgeos)</code></pre>
-<pre><code>## rgeos version: 0.3-26, (SVN revision 560)
-##  GEOS runtime version: 3.6.1-CAPI-1.10.1 r0 
-##  Linking to sp version: 1.2-7 
-##  Polygon checking: TRUE</code></pre>
-<pre class="r"><code>library(maptools)</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
-<pre><code>## Checking rgeos availability: TRUE</code></pre>
-<pre class="r"><code>library(ggmap)</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre class="r"><code>library(broom)
+library(rgeos)
+library(maptools)
+library(ggmap)
+library(broom)
 library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:rgeos':
-## 
-##     intersect, setdiff, union</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
 <pre class="r"><code># import mapping data
-vic.lga.shp &lt;- readShapeSpatial(&quot;C:/RStudio Projects/Data Visualisation/Modules/Module 6/vmlite_lga_cm.shp&quot;)</code></pre>
-<pre><code>## Warning: use rgdal::readOGR or sf::st_read
+vic.lga.shp &lt;- readShapeSpatial(&quot;C:/RStudio Projects/Data Visualisation/Modules/Module 6/vmlite_lga_cm.shp&quot;)
 
-## Warning: use rgdal::readOGR or sf::st_read</code></pre>
-<pre class="r"><code># import data to be mapped
-lga_profiles &lt;- read_csv(&quot;C:/RStudio Projects/Data Visualisation/Modules/Module 6/lga_profiles_data_2011_pt1.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_integer(),
-##   lga = col_character(),
-##   lga_name = col_character(),
-##   metro_rural = col_character(),
-##   dh_region = col_character(),
-##   area_of_lga_sq_km = col_double(),
-##   most_populpus_community = col_character(),
-##   distance_to_melbourne = col_double(),
-##   travel_time_to_melbourne = col_double(),
-##   remoteness_area = col_character(),
-##   aria_measures_low_avg_high = col_character(),
-##   business = col_character(),
-##   industrial = col_character(),
-##   residential = col_character(),
-##   rural = col_character(),
-##   other = col_character(),
-##   per_annum_population_change_2000_2010 = col_double(),
-##   per_annum_projected_population_change_2010_2022 = col_double(),
-##   erp_2010_0_14 = col_double(),
-##   erp_2010_15_24 = col_double(),
-##   erp_2010_25_44 = col_double()
-##   # ... with 67 more columns
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code># convert shp file to data frame &amp; alter column name for SQL-style join
+# import data to be mapped
+lga_profiles &lt;- read_csv(&quot;C:/RStudio Projects/Data Visualisation/Modules/Module 6/lga_profiles_data_2011_pt1.csv&quot;)
+
+# convert shp file to data frame &amp; alter column name for SQL-style join
 lga_shp &lt;- tidy(vic.lga.shp, region = &quot;lga_name&quot;)
 lga_shp$lga_name &lt;- lga_shp$id
 
