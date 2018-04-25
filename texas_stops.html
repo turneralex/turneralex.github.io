@@ -123,25 +123,8 @@ $(document).ready(function () {
 
 <div id="required-packages" class="section level2">
 <h2>Required Packages</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## filter(): dplyr, stats
-## lag():    dplyr, stats</code></pre>
-<pre class="r"><code>library(magrittr)</code></pre>
-<pre><code>## 
-## Attaching package: 'magrittr'</code></pre>
-<pre><code>## The following object is masked from 'package:purrr':
-## 
-##     set_names</code></pre>
-<pre><code>## The following object is masked from 'package:tidyr':
-## 
-##     extract</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(magrittr)</code></pre>
 </div>
 <div id="data-information" class="section level2">
 <h2>Data Information</h2>
@@ -150,21 +133,9 @@ $(document).ready(function () {
 <div id="data" class="section level2">
 <h2>Data</h2>
 <pre class="r"><code># import data
-texas_stops &lt;- read_csv(&quot;C:/RStudio Projects/Data Visualisation/Assignment 2/TX_2010_onwards.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   stop_date = col_date(format = &quot;&quot;),
-##   stop_time = col_time(format = &quot;&quot;),
-##   county_fips = col_integer(),
-##   fine_grained_location = col_integer(),
-##   search_conducted = col_logical(),
-##   contraband_found = col_logical(),
-##   lat = col_double(),
-##   lon = col_double()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code># data
+texas_stops &lt;- read_csv(&quot;C:/RStudio Projects/Data Visualisation/Assignment 2/TX_2010_onwards.csv&quot;)
+
+# data
 head(texas_stops)</code></pre>
 <pre><code>## # A tibble: 6 x 26
 ##                id state  stop_date stop_time location_raw      county_name
