@@ -140,24 +140,23 @@ texas_stops &lt;- read_csv(&quot;C:/RStudio Projects/Data Visualisation/Assignme
 # data
 head(texas_stops)</code></pre>
 <pre><code>## # A tibble: 6 x 26
-##                id state  stop_date stop_time location_raw      county_name
-##             &lt;chr&gt; &lt;chr&gt;     &lt;date&gt;    &lt;time&gt;        &lt;chr&gt;            &lt;chr&gt;
-## 1 TX-2010-0000002    TX 2010-01-01  00:00:00    Guadalupe Guadalupe County
-## 2 TX-2010-0000003    TX 2010-01-01  00:00:00       Fannin    Fannin County
-## 3 TX-2010-0000004    TX 2010-01-01  00:00:00      Coryell   Coryell County
-## 4 TX-2010-0000005    TX 2010-01-01  00:00:00       Dallas    Dallas County
-## 5 TX-2010-0000006    TX 2010-01-01  00:00:00       Denton    Denton County
-## 6 TX-2010-0000007    TX 2010-01-01  00:00:00       Denton    Denton County
-## # ... with 20 more variables: county_fips &lt;int&gt;,
-## #   fine_grained_location &lt;int&gt;, police_department &lt;chr&gt;,
-## #   driver_gender &lt;chr&gt;, driver_age_raw &lt;chr&gt;, driver_age &lt;chr&gt;,
-## #   driver_race_raw &lt;chr&gt;, driver_race &lt;chr&gt;, violation_raw &lt;chr&gt;,
-## #   violation &lt;chr&gt;, search_conducted &lt;lgl&gt;, search_type_raw &lt;chr&gt;,
-## #   search_type &lt;chr&gt;, contraband_found &lt;lgl&gt;, stop_outcome &lt;chr&gt;,
-## #   is_arrested &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;, officer_id &lt;chr&gt;,
-## #   driver_race_original &lt;chr&gt;</code></pre>
+##   id      state stop_date  stop_time location_raw county_name  county_fips
+##   &lt;chr&gt;   &lt;chr&gt; &lt;date&gt;     &lt;time&gt;    &lt;chr&gt;        &lt;chr&gt;              &lt;int&gt;
+## 1 TX-201~ TX    2010-01-01 00'00&quot;    Guadalupe    Guadalupe C~       48187
+## 2 TX-201~ TX    2010-01-01 00'00&quot;    Fannin       Fannin Coun~       48147
+## 3 TX-201~ TX    2010-01-01 00'00&quot;    Coryell      Coryell Cou~       48099
+## 4 TX-201~ TX    2010-01-01 00'00&quot;    Dallas       Dallas Coun~       48113
+## 5 TX-201~ TX    2010-01-01 00'00&quot;    Denton       Denton Coun~       48121
+## 6 TX-201~ TX    2010-01-01 00'00&quot;    Denton       Denton Coun~       48121
+## # ... with 19 more variables: fine_grained_location &lt;int&gt;,
+## #   police_department &lt;chr&gt;, driver_gender &lt;chr&gt;, driver_age_raw &lt;chr&gt;,
+## #   driver_age &lt;chr&gt;, driver_race_raw &lt;chr&gt;, driver_race &lt;chr&gt;,
+## #   violation_raw &lt;chr&gt;, violation &lt;chr&gt;, search_conducted &lt;lgl&gt;,
+## #   search_type_raw &lt;chr&gt;, search_type &lt;chr&gt;, contraband_found &lt;lgl&gt;,
+## #   stop_outcome &lt;chr&gt;, is_arrested &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;,
+## #   officer_id &lt;chr&gt;, driver_race_original &lt;chr&gt;</code></pre>
 <pre class="r"><code># define driver race variable as factor
-texas_stops$driver_race &lt;- factor(texas_stops$driver_race)
+texas_stops$driver_race &lt;- texas_stops$driver_race %&gt;% factor()
 
 # create data frames for plot
 # 1st plot
@@ -172,8 +171,8 @@ plot_data &lt;- texas_stops %&gt;%
   group_by(county_name, driver_race) %&gt;% 
   summarise(
     total_stops = n(),
-    search_rate = (sum(search_conducted, na.rm = T)/n()*100),
-    hit_rate = (sum(contraband_found, na.rm = T))/(sum(search_conducted, na.rm = T))*100
+    search_rate = sum(search_conducted, na.rm = T)/n()*100,
+    hit_rate = sum(contraband_found, na.rm = T)/sum(search_conducted, na.rm = T)*100
     )
 
 # 2nd plot
@@ -186,27 +185,26 @@ summary_stats &lt;- texas_stops %&gt;%
     ) %&gt;% 
   group_by(driver_race) %&gt;% 
   summarise(
-    search_rate = (sum(search_conducted, na.rm = T)/n()*100),
-    hit_rate = (sum(contraband_found, na.rm = T))/(sum(search_conducted, na.rm = T))*100,
+    search_rate = sum(search_conducted, na.rm = T)/n()*100,
+    hit_rate = sum(contraband_found, na.rm = T)/sum(search_conducted, na.rm = T)*100,
     total_stops = n()
     )
 
 # convert to long format for plotting
-summary_stats &lt;- gather(summary_stats, variable, value, -1)
+summary_stats &lt;- summary_stats %&gt;%
+  gather(variable, value, -1)
 
 # define variable as factor so order is correct in plot &amp; labels are clean
-summary_stats$variable &lt;- factor(
-  summary_stats$variable, 
-  levels = c(&quot;total_stops&quot;, &quot;search_rate&quot;, &quot;hit_rate&quot;), 
-  labels = c(&quot;Total Stops&quot;, &quot;Search Rate %&quot;, &quot;Hit Rate %&quot;)
-)</code></pre>
+summary_stats$variable &lt;- summary_stats$variable %&gt;% 
+  factor(levels = c(&quot;total_stops&quot;, &quot;search_rate&quot;, &quot;hit_rate&quot;), 
+         labels = c(&quot;Total Stops&quot;, &quot;Search Rate %&quot;, &quot;Hit Rate %&quot;))</code></pre>
 </div>
 <div id="visualisation" class="section level2">
 <h2>Visualisation</h2>
 <pre class="r"><code>#remove scientific notation for legend
 options(scipen = 999)
 
-# create 1st plot &amp; apply filter to remove outliers caused by small samples
+# create 1st plot &amp; apply filter to remove outliers caused by small samples &amp; NaN values
 p1 &lt;- ggplot(filter(plot_data, !is.nan(hit_rate) &amp; total_stops &gt;= 100), 
              aes(search_rate, hit_rate, size = total_stops, colour = driver_race)) +
   geom_point() +
